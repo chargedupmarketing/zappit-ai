@@ -75,10 +75,11 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <ArrowDown className="w-5 h-5 text-text-muted" />
-        </div>
+      </div>
+
+      {/* Scroll indicator — pinned to the bottom of the section */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <ArrowDown className="w-5 h-5 text-text-muted" />
       </div>
     </section>
   );
