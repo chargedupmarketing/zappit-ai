@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 
 const products = [
   {
@@ -21,7 +22,7 @@ const products = [
       "Works on TradingView & Apex",
     ],
     cta: "Starting at $49/mo",
-    href: "#pricing",
+    href: "/products/indicators",
     badge: "Popular",
   },
   {
@@ -36,7 +37,7 @@ const products = [
       "24/7 market monitoring",
     ],
     cta: "Starting at $149/mo",
-    href: "#pricing",
+    href: "/products/algorithms",
     badge: "Premium",
   },
 ];
@@ -102,13 +103,13 @@ export default function ProductsSection() {
                 </ul>
 
                 {/* CTA */}
-                <a
+                <Link
                   href={product.href}
                   className="inline-flex items-center gap-2 text-neon-orange font-semibold group-hover:gap-3 transition-all duration-300"
                 >
                   {product.cta}
                   <ArrowRight className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             </div>
           ))}

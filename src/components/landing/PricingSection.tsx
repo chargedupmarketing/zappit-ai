@@ -1,6 +1,7 @@
 "use client";
 
-import { Check, Zap, Star } from "lucide-react";
+import { useState } from "react";
+import { Check, Zap, Star, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 interface PricingTier {
@@ -16,6 +17,8 @@ interface PricingTier {
   href: string;
 }
 
+const VISIBLE_FEATURES = 4;
+
 const pricingTiers: PricingTier[] = [
   {
     name: "Indicator Monthly",
@@ -30,7 +33,7 @@ const pricingTiers: PricingTier[] = [
       "Discord community access",
       "Email support",
     ],
-    href: "/cart?product=indicator&billing=monthly",
+    href: "/products/indicators",
   },
   {
     name: "Indicator Yearly",
@@ -47,7 +50,7 @@ const pricingTiers: PricingTier[] = [
       "Priority support",
     ],
     bestValue: true,
-    href: "/cart?product=indicator&billing=yearly",
+    href: "/products/indicators",
   },
   {
     name: "Indicator Lifetime",
@@ -63,7 +66,7 @@ const pricingTiers: PricingTier[] = [
       "Priority support",
       "Lifetime updates",
     ],
-    href: "/cart?product=indicator&billing=lifetime",
+    href: "/products/indicators",
   },
   {
     name: "Algorithm Monthly",
@@ -80,7 +83,7 @@ const pricingTiers: PricingTier[] = [
       "Priority support",
     ],
     popular: true,
-    href: "/cart?product=algorithm&billing=monthly",
+    href: "/products/algorithms",
   },
   {
     name: "Algorithm Yearly",
@@ -99,7 +102,7 @@ const pricingTiers: PricingTier[] = [
       "Custom parameter tuning",
     ],
     bestValue: true,
-    href: "/cart?product=algorithm&billing=yearly",
+    href: "/products/algorithms",
   },
   {
     name: "Algorithm Lifetime",
@@ -118,7 +121,7 @@ const pricingTiers: PricingTier[] = [
       "Lifetime updates",
       "1-on-1 setup call",
     ],
-    href: "/cart?product=algorithm&billing=lifetime",
+    href: "/products/algorithms",
   },
 ];
 
@@ -130,9 +133,7 @@ export default function PricingSection() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
             <Star className="w-4 h-4 text-neon-orange" />
-            <span className="text-sm text-text-secondary">
-              Simple Pricing
-            </span>
+            <span className="text-sm text-text-secondary">Simple Pricing</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Choose Your{" "}
@@ -145,11 +146,11 @@ export default function PricingSection() {
         </div>
 
         {/* Indicators pricing */}
-        <div className="mb-12">
-          <h3 className="text-xl font-semibold text-center mb-8 text-text-secondary">
+        <div className="mb-16">
+          <h3 className="text-2xl sm:text-3xl font-bold text-center mb-8 text-white platform-label-glow">
             Trading Indicators
           </h3>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
             {pricingTiers
               .filter((t) => t.productType === "Indicators")
               .map((tier) => (
@@ -160,10 +161,10 @@ export default function PricingSection() {
 
         {/* Algorithms pricing */}
         <div>
-          <h3 className="text-xl font-semibold text-center mb-8 text-text-secondary">
+          <h3 className="text-2xl sm:text-3xl font-bold text-center mb-8 text-white platform-label-glow">
             Trading Algorithms
           </h3>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto items-stretch">
             {pricingTiers
               .filter((t) => t.productType === "Algorithms")
               .map((tier) => (
@@ -193,11 +194,15 @@ export default function PricingSection() {
 }
 
 function PricingCard({ tier }: { tier: PricingTier }) {
+  const [expanded, setExpanded] = useState(false);
   const isHighlighted = tier.popular || tier.bestValue;
+  const hasMore = tier.features.length > VISIBLE_FEATURES;
+  const visibleFeatures = expanded ? tier.features : tier.features.slice(0, VISIBLE_FEATURES);
+  const hiddenCount = tier.features.length - VISIBLE_FEATURES;
 
   return (
     <div
-      className={`relative rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02] ${
+      className={`relative rounded-2xl p-8 flex flex-col transition-all duration-300 ${
         isHighlighted
           ? "glass border-neon-orange/30 hover:border-neon-orange/50"
           : "glass glass-hover"
@@ -226,29 +231,47 @@ function PricingCard({ tier }: { tier: PricingTier }) {
           <span className="text-4xl font-bold">{tier.price}</span>
           <span className="text-text-muted">{tier.period}</span>
         </div>
-        {tier.billedAs && (
+        {tier.billedAs ? (
           <p className="text-sm text-text-muted mt-1">{tier.billedAs}</p>
+        ) : (
+          /* Reserve the same height even when there's no billedAs line */
+          <p className="text-sm mt-1 invisible select-none">placeholder</p>
         )}
       </div>
 
-      {/* Features */}
-      <ul className="space-y-3 mb-8">
-        {tier.features.map((feature) => (
-          <li key={feature} className="flex items-center gap-3 text-sm">
-            <Check className="w-4 h-4 text-neon-orange flex-shrink-0" />
-            <span className="text-text-secondary">{feature}</span>
-          </li>
-        ))}
-      </ul>
+      {/* Features — grows to fill available space */}
+      <div className="flex-1">
+        <ul className="space-y-3">
+          {visibleFeatures.map((feature) => (
+            <li key={feature} className="flex items-center gap-3 text-sm">
+              <Check className="w-4 h-4 text-neon-orange flex-shrink-0" />
+              <span className="text-text-secondary">{feature}</span>
+            </li>
+          ))}
+        </ul>
 
-      {/* CTA */}
+        {/* Show more / less toggle */}
+        {hasMore && (
+          <button
+            onClick={() => setExpanded((p) => !p)}
+            className="mt-4 flex items-center gap-1 text-xs text-text-muted hover:text-neon-orange transition-colors"
+          >
+            <ChevronDown
+              className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                expanded ? "rotate-180" : ""
+              }`}
+            />
+            {expanded
+              ? "Show less"
+              : `Show ${hiddenCount} more feature${hiddenCount > 1 ? "s" : ""}`}
+          </button>
+        )}
+      </div>
+
+      {/* CTA — always pinned to the bottom */}
       <Link
         href={tier.href}
-        className={`block w-full text-center rounded-full py-3 font-semibold transition-all duration-300 ${
-          isHighlighted
-            ? "gradient-bg text-white btn-glow hover:scale-105"
-            : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
-        }`}
+        className="mt-8 block w-full text-center rounded-full py-3 font-semibold transition-all duration-300 gradient-bg text-white btn-glow hover:scale-105"
       >
         <span className="inline-flex items-center gap-2">
           <Zap className="w-4 h-4" />

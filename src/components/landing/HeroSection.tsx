@@ -20,7 +20,7 @@ export default function HeroSection() {
         {/* Headline */}
         <h1 className="animate-fade-in-up-delay-1 text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight tracking-tight mb-6">
           Trade Smarter with{" "}
-          <span className="gradient-text text-glow">Zappit AI</span>
+          <span className="gradient-text text-glow whitespace-nowrap">Zappit AI</span>
         </h1>
 
         {/* Subtext */}

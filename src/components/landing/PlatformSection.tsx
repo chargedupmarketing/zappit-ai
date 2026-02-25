@@ -115,16 +115,19 @@ export default function PlatformSection() {
   return (
     <section className="relative py-20 overflow-hidden">
       <div className="text-center mb-10 px-6">
-        <p className="text-text-muted text-sm uppercase tracking-widest">
+        <p className="text-white text-base sm:text-lg font-semibold tracking-widest uppercase platform-label-glow">
           Works with your favorite platforms
         </p>
       </div>
 
-      {/* Fade edges */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-black to-transparent z-10" />
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-black to-transparent z-10" />
-
-      {/* Scrolling track */}
+      {/* Scrolling track — mask fades edges transparently so no color mismatch */}
+      <div
+        className="overflow-hidden"
+        style={{
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+          maskImage: "linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%)",
+        }}
+      >
       <div className="flex carousel-track gap-6 w-max">
         {doubled.map((platform, i) => (
           <div
@@ -144,6 +147,7 @@ export default function PlatformSection() {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </section>
   );

@@ -237,3 +237,11 @@ body {
 .carousel-track:hover {
   animation-play-state: paused;
 }
+
+/* Platform label white underglow */
+.platform-label-glow {
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.6),
+    0 0 28px rgba(255, 255, 255, 0.3),
+    0 0 50px rgba(255, 255, 255, 0.1);
+}
